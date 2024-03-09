@@ -1,0 +1,50 @@
+html, body {
+    margin:0;
+    padding:0;
+}
+
+#container {
+    display: flex;
+}
+
+.pane {
+    height: 100vh;
+    width: 50%;
+    padding: 24px;
+    overflow: hidden;
+}
+
+#pane1 {
+    border-right: 3px solid black;
+}
+
+.word {
+    display: block;
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 1em;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.drop {
+    position: absolute;
+    z-index: -1;
+    top: -1vh;
+    transform: translateY(0);
+    animation: fall 3s linear forwards;
+    
+    -webkit-touch-callout: none;
+      -webkit-user-select: none;
+       -khtml-user-select: none;
+         -moz-user-select: none; 
+          -ms-user-select: none; 
+              user-select: none; 
+  }
+  
+  @keyframes fall {
+    to{
+      transform: translateY(101vh);
+    }
+  }
