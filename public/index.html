@@ -32,9 +32,9 @@
                     headers: { "Content-type": "application/json; charset=UTF-8" }
                 })
                 const json = await response.json()
-                console.log("showing ", json.word)
                 const end = Date.now()
                 const duration = end - start
+                console.log("showing ", version, json.word, duration)
                 showWord(json.word, version, duration)               
             }
         }

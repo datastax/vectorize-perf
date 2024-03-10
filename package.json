@@ -13,6 +13,7 @@
     "@fastify/static": "^7.0.1",
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
-    "openai": "^4.28.4"
+    "openai": "^4.28.4",
+    "uuid-by-string": "^4.0.0"
   }
 }
