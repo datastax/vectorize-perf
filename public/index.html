@@ -5,57 +5,43 @@
 </head>
 <body>
     <div id="container">
-        <div id="pane1" class="pane"></div>
-        <div id="pane2" class="pane"></div>
+        <div id="vectorize" class="pane"><h1>Vectorize</h1></div>
+        <div id="openai" class="pane"><h1>OpenAI</h1></div>
     </div>
     <script async>
-        function showWord(word, pane) {
+        function showWord(word, version, duration) {
             const drop = document.createElement("div");
             drop.classList.add("drop")
             drop.classList.add("word")
-            drop.style.left = (pane === "left" ? 0 : 50) + Math.random() * 40 + "%";
-            drop.style.animationDuration = (pane === "left" ? "2" : "4") + "s"
+            drop.classList.add(version)
+            drop.style.left = (version === "vectorize" ? 0 : 50) + Math.random() * 40 + "%";
+            drop.style.animationDuration = (duration * 10) + "ms"
             drop.innerText = word
-            document.getElementById((pane === "left" ? "pane1" : "pane2")).appendChild(drop)
+            document.getElementById(version).appendChild(drop)
         }
-
-
 
         const words = window.text.split(" ")
 
-        async function runOpenAI(words) {
+        async function run(words, version) {
             for (word of words) {
+                const start = Date.now()
                 console.log("api call for ", word)
-                const response = await fetch("/api/openai", {
+                const response = await fetch(`/api/${ version }`, {
                     method: "POST",
                     body: JSON.stringify({ word }),
                     headers: { "Content-type": "application/json; charset=UTF-8" }
                 })
                 const json = await response.json()
                 console.log("showing ", json.word)
-                showWord(json.word, "right")               
+                const end = Date.now()
+                const duration = end - start
+                showWord(json.word, version, duration)               
             }
         }
 
-        async function runVectorize(words) {
-            for (word of words) {
-                console.log("api call for ", word)
-                const response = await fetch("/api/vectorize", {
-                    method: "POST",
-                    body: JSON.stringify({ word }),
-                    headers: { "Content-type": "application/json; charset=UTF-8" }
-                })
-                const json = await response.json()
-                console.log("showing ", json.word)
-                showWord(json.word, "left")               
-            }
-        }
+        run(words, "openai")
+        run(words, "vectorize")
 
-        runOpenAI(words)
-
-        runVectorize(words)
-
-        //runVectorize()
     </script>
 </body>
 </html>
