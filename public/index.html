@@ -62,7 +62,7 @@
 
         window.onload = (event) => {
             console.log("page is fully loaded")
-            const words = window.text.split(" ")
+            const words = window.text.split(/\s/).filter(w => w.length > 0)
             run(words, "openai")
             run(words, "vectorize")
         }
