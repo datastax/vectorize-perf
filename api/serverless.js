@@ -34,7 +34,6 @@ app.post('/api/openai', async function handler (request, reply) {
       encoding_format: "float",
     })
     const vector = embedding.data[0]?.embedding
-    //console.log(vector)
     const collection = await astraDb.collection("words")
     const uuid = getUuid(word)
     await collection.updateOne(
