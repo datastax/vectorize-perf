@@ -31,7 +31,7 @@ export default function Home() {
   const run = async (words: string[], version: string) => {
     words.forEach(async word => {
       const start = Date.now()
-      // console.log("api call for ", word)
+
       const response = await fetch(`/api/${version}`, {
           method: "POST",
           body: JSON.stringify({ word }),
@@ -40,7 +40,7 @@ export default function Home() {
       const json = await response.json()
       const end = Date.now()
       const duration = end - start
-      // console.log("showing ", version, json.word, duration)
+
       durations.push(duration)
 
       if (version === "vectorize") {
@@ -54,9 +54,8 @@ export default function Home() {
   const simultaneousCalls = async () => {
     const words = SCROLL_TEXT.split(/\s/).filter(w => w.length > 0)
     await Promise.all([
-      run(words, "openai"),
       run(words, "vectorize"),
-      
+      run(words, "openai"),
     ])
   } 
 
