@@ -4,23 +4,25 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Gauge from "@/components/Gauge";
 import { SCROLL_TEXT } from "@/utils/consts";
+import Header from "@/components/Header";
+import StarFighter from "@/components/StarFighter";
+import Footer from "@/components/Footer";
+
+
+type TypeOptions = "vectorize" | "openai";
+interface StarFighterProps {
+  word: string;
+  type: TypeOptions;
+  duration: number;
+  position: number;
+}
 
 export default function Home() {
   const [ vectorizeValue, setVectorizeValue ] = useState(0)
   const [ openaiValue, setOpenaiValue ] = useState(0)
+  const [ starFighterWords, setStarFighterWords ] = useState<StarFighterProps[]>([])
 
   const durations: number[] = []
-
-  const showWord = (word: string, version: string, duration: number) => {
-    const drop = document.createElement("div");
-    drop.classList.add("drop")
-    drop.classList.add("word")
-    drop.classList.add(version)
-    drop.style.left = (version === "vectorize" ? 0 : 50) + Math.random() * 40 + "%";
-    drop.style.animationDuration = (duration * 10) + "ms"
-    drop.innerText = word
-    document.getElementById(version)?.appendChild(drop)
-  }
 
   const calcSpeed = (duration: number) => {
     const values = durations
@@ -28,7 +30,7 @@ export default function Home() {
     return (min / duration) * 100
 }
 
-  const run = async (words: string[], version: string) => {
+  const run = async (words: string[], version: TypeOptions) => {
     words.forEach(async word => {
       const start = Date.now()
 
@@ -48,7 +50,8 @@ export default function Home() {
       } else if (version === "openai") {
           setOpenaiValue(calcSpeed(duration))
       }
-      showWord(json.word, version, duration)               
+      
+      setStarFighterWords(prev => [...prev, {word: json.word, type: version, duration, position: Math.random() * 40}])
     })
   }
   const simultaneousCalls = async () => {
@@ -64,23 +67,29 @@ export default function Home() {
   }, []);
 
   return (
-    <div id="container">
-      <div id="vectorize" className="pane">
-          <div>
-              <img src="/nvidia.svg" height="50px"/>
-          </div>
-          <div className="gauge-container">
-              <Gauge name="gauge-vectorize" gaugeValue={vectorizeValue} />
-          </div>
-      </div>
-      <div id="openai" className="pane">
-          <div>
-              <img src="/openai.svg" height="50px"/>
-          </div>
-          <div className="gauge-container">
-              <Gauge name="gauge-openai" gaugeValue={openaiValue} />
-          </div>
-      </div>
-  </div>
+    <>
+      <Header />
+      <main id="container" className="grow">
+        <div id="vectorize" className="pane">
+            <div className="gauge-container">
+                <Gauge name="gauge-vectorize" gaugeValue={vectorizeValue} />
+            </div>
+        </div>
+        <div id="openai" className="pane">
+            <div className="gauge-container">
+                <Gauge name="gauge-openai" gaugeValue={openaiValue} />
+            </div>
+        </div>
+        {starFighterWords.map((fighter, index) => (
+          <StarFighter
+            key={`${fighter.word}-${fighter.type}-${index}`}
+            word={fighter.word}
+            type={fighter.type} duration={fighter.duration}
+            position={fighter.position}
+          />
+        ))}
+      </main>
+      <Footer />
+    </>
   );
 }

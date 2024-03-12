@@ -3,9 +3,14 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background-dark: #000002;
+    --text-light: #D0ECFD;
+    --accent-blue: #3156C9;
+  }
   html, body {
-    margin:0;
-    padding:0;
+    background: var(--background-dark);
+    color: var(--text-light);
   }
 
   #container {
@@ -13,7 +18,7 @@
   }
 
   .pane {
-    height: 100vh;
+    height: 100%;
     width: 50%;
     padding: 24px;
     overflow: hidden;
@@ -25,9 +30,9 @@
 
   .word {
     display: block;
-    background-color: #fff;
+    /* background-color: #fff; */
     border-radius: 8px;
-    padding: 8px;
+    /* padding: 8px; */
     font-size: 1em;
     font-family: 'Courier New', Courier, monospace;
   }
@@ -38,7 +43,7 @@
 
   .drop {
     position: absolute;
-    z-index: -1;
+    z-index: 1;
     top: -1vh;
     transform: translateY(0);
     animation: fall 3s linear forwards;
@@ -64,5 +69,13 @@
   #gaugeValue {
     margin-top: 20px;
     width: 100px;
+  }
+
+  .xwing {
+    color: var(--text-light);
+  }
+
+  .tie-fighter {
+    color: var(--accent-blue);
   }
 }
