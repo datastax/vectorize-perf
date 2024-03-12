@@ -72,12 +72,12 @@ export default function Home() {
       <main id="container" className="grow">
         <div id="vectorize" className="pane">
             <div className="gauge-container">
-                <Gauge name="gauge-vectorize" gaugeValue={vectorizeValue} />
+                {/* <Gauge name="gauge-vectorize" gaugeValue={vectorizeValue} /> */}
             </div>
         </div>
         <div id="openai" className="pane">
             <div className="gauge-container">
-                <Gauge name="gauge-openai" gaugeValue={openaiValue} />
+                {/* <Gauge name="gauge-openai" gaugeValue={openaiValue} /> */}
             </div>
         </div>
         {starFighterWords.map((fighter, index) => (
