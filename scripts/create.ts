@@ -1,6 +1,4 @@
-const dotenv = require("dotenv")
-
-dotenv.config()
+import 'dotenv/config';
 
 const {
     ASTRA_DB_ENDPOINT,
@@ -8,13 +6,14 @@ const {
 } = process.env
 
 async function create() {
+    console.log(ASTRA_DB_APPLICATION_TOKEN, ASTRA_DB_ENDPOINT)
     console.log("Creating the Vectorize collection")
     let response = await fetch(`${ ASTRA_DB_ENDPOINT }/api/json/v1/default_keyspace`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'token': ASTRA_DB_APPLICATION_TOKEN
-        },
+        } as HeadersInit,
         body: JSON.stringify({
             createCollection: { 
                 name: "vectorize",
@@ -40,7 +39,7 @@ async function create() {
         headers: {
             'Content-Type': 'application/json',
             'token': ASTRA_DB_APPLICATION_TOKEN
-        },
+        } as HeadersInit,
         body: JSON.stringify({
             createCollection: { 
                 name: "openai",
