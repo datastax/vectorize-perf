@@ -31,7 +31,7 @@ export default function Home() {
 }
 
   const run = async (words: string[], version: TypeOptions) => {
-    words.forEach(async word => {
+    for (const word of words) {
       const start = Date.now()
 
       const response = await fetch(`/api/${version}`, {
@@ -42,7 +42,7 @@ export default function Home() {
       const json = await response.json()
       const end = Date.now()
       const duration = end - start
-
+      console.log("showing ", version, json.word, duration)
       durations.push(duration)
 
       if (version === "vectorize") {
@@ -52,7 +52,7 @@ export default function Home() {
       }
       
       setStarFighterWords(prev => [...prev, {word: json.word, type: version, duration, position: Math.random() * 40}])
-    })
+    }
   }
   const simultaneousCalls = async () => {
     const words = SCROLL_TEXT.split(/\s/).filter(w => w.length > 0)
@@ -60,16 +60,23 @@ export default function Home() {
       run(words, "vectorize"),
       run(words, "openai"),
     ])
-  } 
+  }
 
-  useEffect(() => {
+  const onStart = () => {
     simultaneousCalls();
-  }, []);
+  }
 
   return (
     <>
-      <Header />
-      <main id="container" className="grow">
+      <Header
+        onStart={onStart}
+        onReset={() => {
+          setVectorizeValue(0);
+          setOpenaiValue(0);
+          setStarFighterWords([]);
+        }}
+      />
+      <main className="grow w-full max-w-full bg-vectorize-panel bg-contain bg-no-repeat bg-center h-full z-0">
         <div id="vectorize" className="pane">
             <div className="gauge-container">
                 {/* <Gauge name="gauge-vectorize" gaugeValue={vectorizeValue} /> */}
