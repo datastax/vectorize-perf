@@ -18,7 +18,6 @@ async function create() {
                 name: "vectorize",
                 options: { 
                     vector: {
-                        metric: "cosine",
                         dimension: 1024,
                         service: {
                             provider: "nvidia",
