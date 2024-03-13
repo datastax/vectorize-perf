@@ -57,8 +57,18 @@
     color: var(--text-light);
   }
 
+  .xwing > svg {
+    width: 72px;
+    height: auto;
+  }
+
   .tie-fighter {
     color: var(--accent-blue);
+  }
+
+  .tie-fighter > svg {
+    width: 60px;
+    height: auto;
   }
 
   .action-button {
@@ -69,6 +79,10 @@
 
   .dark-bg {
     background-color: var(--background-dark);
+  }
+
+  .light-text {
+    color: var(--text-light);
   }
 
   .green-text {
