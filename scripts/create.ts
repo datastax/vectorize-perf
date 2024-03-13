@@ -6,7 +6,6 @@ const {
 } = process.env
 
 async function create() {
-    console.log(ASTRA_DB_APPLICATION_TOKEN, ASTRA_DB_ENDPOINT)
     console.log("Creating the Vectorize collection")
     let response = await fetch(`${ ASTRA_DB_ENDPOINT }/api/json/v1/default_keyspace`, {
         method: 'POST',
@@ -19,13 +18,12 @@ async function create() {
                 name: "vectorize",
                 options: { 
                     vector: {
-                        size: 1024 
-                    }, 
-                    vectorize: { 
-                        service: "nvidia", 
-                        options: { 
-                            modelName: "NV-Embed-QA" 
-                        } 
+                        metric: "cosine",
+                        dimension: 1024,
+                        service: {
+                            provider: "nvidia",
+                            modelName: "NV-Embed-QA"
+                        }
                     } 
                 } 
             } 
