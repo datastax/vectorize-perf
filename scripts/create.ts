@@ -19,14 +19,12 @@ async function create() {
                 name: "vectorize",
                 options: { 
                     vector: {
-                        size: 1024 
-                    }, 
-                    vectorize: { 
-                        service: "nvidia", 
-                        options: { 
+                        size: 1024,
+                        service: { 
+                            provider: "nvidia", 
                             modelName: "NV-Embed-QA" 
                         } 
-                    } 
+                    }
                 } 
             } 
         })
