@@ -1,15 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import Gauge from "@/components/Gauge";
+import { useState } from "react";
 import { SCROLL_TEXT } from "@/utils/consts";
 import Header from "@/components/Header";
 import StarFighter from "@/components/StarFighter";
 import Footer from "@/components/Footer";
+import Timer from "@/components/Timer";
 
 
-type TypeOptions = "vectorize" | "openai";
+export type TypeOptions = "vectorize" | "openai";
 interface StarFighterProps {
   word: string;
   type: TypeOptions;
@@ -18,19 +17,20 @@ interface StarFighterProps {
 }
 
 export default function Home() {
-  const [ vectorizeValue, setVectorizeValue ] = useState(0)
-  const [ openaiValue, setOpenaiValue ] = useState(0)
+  const [ vectorizeTimer, setVectorizeTimer ] = useState<boolean>(false)
+  const [ openaiTimer, setOpenaiTimer ] = useState<boolean>(false)
+  const [ restartKey, setRestartKey ] = useState<number>(0)
   const [ starFighterWords, setStarFighterWords ] = useState<StarFighterProps[]>([])
 
   const durations: number[] = []
 
-  const calcSpeed = (duration: number) => {
-    const values = durations
-    const min = Math.min(...values)
-    return (min / duration) * 100
-}
-
   const run = async (words: string[], version: TypeOptions) => {
+    if (version === "vectorize") {
+      setVectorizeTimer(true)
+    } else if (version === "openai") {
+      setOpenaiTimer(true)
+    }
+
     for (const word of words) {
       const start = Date.now()
 
@@ -42,16 +42,16 @@ export default function Home() {
       const json = await response.json()
       const end = Date.now()
       const duration = end - start
-      console.log("showing ", version, json.word, duration)
-      durations.push(duration)
 
-      if (version === "vectorize") {
-          setVectorizeValue(calcSpeed(duration))
-      } else if (version === "openai") {
-          setOpenaiValue(calcSpeed(duration))
-      }
+      durations.push(duration)
       
       setStarFighterWords(prev => [...prev, {word: json.word, type: version, duration, position: Math.random() * 40}])
+    }
+
+    if (version === "vectorize") {
+      setVectorizeTimer(false)
+    } else if (version === "openai") {
+      setOpenaiTimer(false)
     }
   }
   const simultaneousCalls = async () => {
@@ -71,21 +71,16 @@ export default function Home() {
       <Header
         onStart={onStart}
         onReset={() => {
-          setVectorizeValue(0);
-          setOpenaiValue(0);
           setStarFighterWords([]);
+          setOpenaiTimer(false);
+          setVectorizeTimer(false);
+          setRestartKey(prev => prev + 1)
         }}
       />
       <main className="grow flex w-full max-w-full bg-vectorize-panel bg-contain bg-no-repeat bg-center h-full z-0">
-        <div id="vectorize" className="pane">
-            <div className="gauge-container">
-                {/* <Gauge name="gauge-vectorize" gaugeValue={vectorizeValue} /> */}
-            </div>
-        </div>
-        <div id="openai" className="pane">
-            <div className="gauge-container">
-                {/* <Gauge name="gauge-openai" gaugeValue={openaiValue} /> */}
-            </div>
+        <div className="self-end flex justify-around items-center w-full pb-6">
+          <Timer running={vectorizeTimer} type="vectorize" restartKey={restartKey} />
+          <Timer running={openaiTimer} type="openai" restartKey={restartKey} />
         </div>
         {starFighterWords.map((fighter, index) => (
           <StarFighter
