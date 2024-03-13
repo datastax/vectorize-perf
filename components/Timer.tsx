@@ -39,7 +39,7 @@ const Timer = ({ running, type, restartKey }: Props) => {
   }
 
   return (
-    <p className={`${type === 'vectorize' ? 'green-text': 'red-text'} dark-bg`}>{formatTime(seconds)}</p>
+    <p className={`${type === 'vectorize' ? 'green-text': 'red-text'} dark-bg px-4`}>{formatTime(seconds)}</p>
   );
 }
 
