@@ -33,7 +33,9 @@ const StarFighter = ({type, word, duration, position}: Props) => {
         left: randomLeft
       }}
     >
-      <span className="border-solid border-2 border-current rounded-md p-1 mb-1 light-text">{word}</span>
+      <div className="border-solid border-2 border-current rounded-md p-1 mb-1">
+        <span className="light-text text-base">{word}</span>
+      </div>
       {type === "vectorize" ? <XWing /> : <TieFighter />}
     </div>
   )
