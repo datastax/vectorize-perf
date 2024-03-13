@@ -76,7 +76,7 @@ export default function Home() {
           setStarFighterWords([]);
         }}
       />
-      <main className="grow w-full max-w-full bg-vectorize-panel bg-contain bg-no-repeat bg-center h-full z-0">
+      <main className="grow flex w-full max-w-full bg-vectorize-panel bg-contain bg-no-repeat bg-center h-full z-0">
         <div id="vectorize" className="pane">
             <div className="gauge-container">
                 {/* <Gauge name="gauge-vectorize" gaugeValue={vectorizeValue} /> */}
