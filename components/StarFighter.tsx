@@ -1,3 +1,5 @@
+import { TypeOptions } from "@/app/page";
+
 const XWing = () => {
   return (
     <svg width="77" height="85" viewBox="0 0 77 85" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -15,7 +17,7 @@ const TieFighter = () => {
 }
 
 interface Props {
-  type: "vectorize" | "openai";
+  type: TypeOptions;
   word: string;
   duration: number;
   position: number;

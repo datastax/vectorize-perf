@@ -6,6 +6,8 @@
   :root {
     --background-dark: #000002;
     --text-light: #D0ECFD;
+    --text-green: #30FF83;
+    --text-red: #FD3537;
     --accent-blue: #3156C9;
     --accent-yellow: #FEE91F;
   }
@@ -14,29 +16,12 @@
     color: var(--text-light);
   }
 
-  .pane {
-    height: 100%;
-    width: 50%;
-    padding: 24px;
-    overflow: hidden;
-  }
-
-  #vectorize {
-    border-right: 3px solid black;
-  }
-
   .word {
     display: block;
-    /* background-color: #fff; */
     border-radius: 8px;
-    /* padding: 8px; */
     font-size: 1em;
-    font-family: 'Courier New', Courier, monospace;
   }
 
-  .openai { color: #333; border: 2px solid #333 }
-
-  .vectorize { color: purple; border: 2px solid purple }
 
   .drop {
     position: absolute;
@@ -84,5 +69,15 @@
 
   .dark-bg {
     background-color: var(--background-dark);
+  }
+
+  .green-text {
+    color: var(--text-green);
+    font-size: 32px;
+  }
+
+  .red-text {
+    color: var(--text-red);
+    font-size: 32px;
   }
 }
