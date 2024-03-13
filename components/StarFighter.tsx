@@ -29,7 +29,7 @@ const StarFighter = ({type, word, duration, position}: Props) => {
     <div
       className={`flex flex-col items-center drop word ${type === "vectorize" ? "xwing" : "tie-fighter"}`}
       style={{
-        animationDuration: `${duration * 10}ms`,
+        animationDuration: `${duration * 20}ms`,
         left: randomLeft
       }}
     >
