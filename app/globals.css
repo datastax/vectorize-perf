@@ -7,14 +7,11 @@
     --background-dark: #000002;
     --text-light: #D0ECFD;
     --accent-blue: #3156C9;
+    --accent-yellow: #FEE91F;
   }
   html, body {
     background: var(--background-dark);
     color: var(--text-light);
-  }
-
-  #container {
-    display: flex;
   }
 
   .pane {
@@ -77,5 +74,15 @@
 
   .tie-fighter {
     color: var(--accent-blue);
+  }
+
+  .action-button {
+    border: 2px solid var(--accent-yellow);
+    border-radius: 6px;
+    padding: 8px 12px;
+  }
+
+  .dark-bg {
+    background-color: var(--background-dark);
   }
 }

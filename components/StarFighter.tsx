@@ -21,7 +21,7 @@ interface Props {
   position: number;
 }
 const StarFighter = ({type, word, duration, position}: Props) => {
-  const randomLeft = (type === "vectorize" ? 0 : 50) + position + "%";
+  const randomLeft = `calc(50% ${type === "vectorize" ?  `- ${position}% - 100px` : `+ ${position}%`}`;
 
   return (
     <div
