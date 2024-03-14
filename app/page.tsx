@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { SCROLL_TEXT } from "@/utils/consts";
 import Header from "@/components/Header";
 import StarFighter from "@/components/StarFighter";
@@ -21,10 +21,9 @@ export default function Home() {
   const [ openaiTimer, setOpenaiTimer ] = useState<boolean>(false)
   const [ restartKey, setRestartKey ] = useState<number>(0)
   const [ starFighterWords, setStarFighterWords ] = useState<StarFighterProps[]>([])
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  const durations: number[] = []
-
-  const run = async (words: string[], version: TypeOptions) => {
+  const run = async (words: string[], version: TypeOptions, signal: AbortSignal) => {
     if (version === "vectorize") {
       setVectorizeTimer(true)
     } else if (version === "openai") {
@@ -34,20 +33,28 @@ export default function Home() {
     for (const word of words) {
       const start = Date.now()
 
-      const response = await fetch(`/api/${version}`, {
+      try {
+        const response = await fetch(`/api/${version}`, {
           method: "POST",
           body: JSON.stringify({ word }),
-          headers: { "Content-type": "application/json; charset=UTF-8" }
-      })
-      const json = await response.json()
-      const end = Date.now()
-      const duration = end - start
+          headers: { "Content-type": "application/json; charset=UTF-8" },
+          signal,
+        })
+        const json = await response.json()
 
-      durations.push(duration)
-      
-      setStarFighterWords(prev => [...prev, {word: json.word, type: version, duration, position: Math.random() * 40}])
+        const end = Date.now()
+        const duration = end - start
+        
+        setStarFighterWords(prev => [...prev, {word: json.word, type: version, duration, position: Math.random() * 40}])
+      } catch (error: Error | any) {
+        if (error.name === 'AbortError') {
+          break; // Exit the loop if the fetch was aborted
+        } else {
+          console.error("Fetch error:", error);
+        }
+      }
     }
-
+    console.log("broken loop")
     if (version === "vectorize") {
       setVectorizeTimer(false)
     } else if (version === "openai") {
@@ -55,10 +62,11 @@ export default function Home() {
     }
   }
   const simultaneousCalls = async () => {
+    abortControllerRef.current = new AbortController();
     const words = SCROLL_TEXT.split(/\s/).filter(w => w.length > 0)
     await Promise.all([
-      run(words, "vectorize"),
-      run(words, "openai"),
+      run(words, "vectorize", abortControllerRef.current.signal),
+      run(words, "openai", abortControllerRef.current.signal),
     ])
   }
 
@@ -74,7 +82,8 @@ export default function Home() {
           setStarFighterWords([]);
           setOpenaiTimer(false);
           setVectorizeTimer(false);
-          setRestartKey(prev => prev + 1)
+          setRestartKey(prev => prev + 1);
+          abortControllerRef.current?.abort();
         }}
       />
       <main className="grow flex w-full max-w-full bg-vectorize-panel bg-contain bg-no-repeat bg-center h-full z-0">
