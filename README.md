@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Vectorize Perf Demo
 
-## Getting Started
+You can find a live version of this performance demo at: https://vectorize-perf.vercel.app
 
-First, run the development server:
+## Description
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This repo contains a simple perf demo that shows developers the benefits of using DataStax Astra DB Vectorize to ingest and compute embeddings in a single API call.
+
+The demo is based on the [opening crawl](https://starwars.fandom.com/wiki/Opening_crawl) text from Star Wars:
+
+```
+It is a period of civil war.
+Rebel spaceships, striking
+from a hidden base, have won
+their first victory against
+the evil Galactic Empire.
+
+During the battle, Rebel
+spies managed to steal secret
+plans to the Empire's
+ultimate weapon, the DEATH
+STAR, an armored space
+station with enough power to
+destroy an entire planet.
+
+Pursued by the Empire's
+sinister agents, Princess
+Leia races home aboard her
+starship, custodian of the
+stolen plans that can save
+her people and restore
+freedom to the galaxy....
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The demo takes this text and breaks it up into an array of words. This array is passed into two processes that run concurrently. All words in each process are handled one at a time.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Process 1 - without Vectorize
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+For each word, two API calls are made on the back end. The first is to OpenAI to compute the embedding for the word. The second is to store the word and the vector in Astra DB. You can find this code in: `app/api/openai/route.ts`
 
-## Learn More
+### Process 2 - with Vectorize
 
-To learn more about Next.js, take a look at the following resources:
+For each word, a single API call is made to DataStax Data API where both the computation of the embedding and the storage in Astra DB are handled by the service. You can find this code in: `app/api/vectorize/route.ts`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Vectorize Developer Preview
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Vectorize is will be available as a Developer Preview soon. Stay tuned to [datastax.com](https://www.datastax.com) for more information.
