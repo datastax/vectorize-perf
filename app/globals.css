@@ -38,19 +38,10 @@
               user-select: none; 
   }
     
-    @keyframes fall {
-      to{
-        transform: translateY(101vh);
-      }
+  @keyframes fall {
+    to{
+      transform: translateY(101vh);
     }
-
-  .gauge-container {
-    position: relative;
-  }
-
-  #gaugeValue {
-    margin-top: 20px;
-    width: 100px;
   }
 
   .xwing {
