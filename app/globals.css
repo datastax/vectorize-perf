@@ -85,4 +85,8 @@
     color: var(--text-red);
     font-size: 32px;
   }
+
+  .blue-text {
+    color: var(--accent-blue);
+  }
 }
