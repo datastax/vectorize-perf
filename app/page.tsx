@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useSearchParams } from 'next/navigation'
 import { SCROLL_TEXT } from "@/utils/consts";
 import Header from "@/components/Header";
@@ -94,7 +94,7 @@ export default function Home() {
   }
 
   return (
-    <Suspense>
+    <>
       <Header
         onStart={onStart}
         onReset={reset}
@@ -114,6 +114,6 @@ export default function Home() {
         ))}
       </main>
       <Footer />
-    </Suspense>
+    </>
   );
 }
