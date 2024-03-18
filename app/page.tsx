@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef, useState } from "react";
+import { useSearchParams } from 'next/navigation'
 import { SCROLL_TEXT } from "@/utils/consts";
 import Header from "@/components/Header";
 import StarFighter from "@/components/StarFighter";
@@ -22,6 +23,10 @@ export default function Home() {
   const [ restartKey, setRestartKey ] = useState<number>(0)
   const [ starFighterWords, setStarFighterWords ] = useState<StarFighterProps[]>([])
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  const searchParams = useSearchParams();
+
+  const infiniteLoop = searchParams.get('loop')
 
   const run = async (words: string[], version: TypeOptions, signal: AbortSignal) => {
     if (version === "vectorize") {
@@ -68,23 +73,31 @@ export default function Home() {
       run(words, "vectorize", abortControllerRef.current.signal),
       run(words, "openai", abortControllerRef.current.signal),
     ])
+
+    if (infiniteLoop) {
+      await new Promise(resolve => setTimeout(resolve, 20000));
+      reset();
+      simultaneousCalls();
+    }
   }
 
   const onStart = () => {
     simultaneousCalls();
   }
 
+  const reset = () => {
+    setStarFighterWords([]);
+    setOpenaiTimer(false);
+    setVectorizeTimer(false);
+    setRestartKey(prev => prev + 1);
+    abortControllerRef.current?.abort();
+  }
+
   return (
     <>
       <Header
         onStart={onStart}
-        onReset={() => {
-          setStarFighterWords([]);
-          setOpenaiTimer(false);
-          setVectorizeTimer(false);
-          setRestartKey(prev => prev + 1);
-          abortControllerRef.current?.abort();
-        }}
+        onReset={reset}
       />
       <main className="grow flex w-full max-w-full bg-vectorize-panel bg-contain bg-no-repeat bg-center h-full z-0">
         <div className="self-end flex justify-around items-center w-full pb-6">
